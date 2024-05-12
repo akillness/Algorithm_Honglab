@@ -4,11 +4,61 @@
 
 using namespace std;
 
+
 string Add(string str1, string str2)
 {
     // TO DO
 
-    return string("0");
+    // parameter string의 길이 중 큰 길이 만큼 반복 횟수 설정
+    string long_len = "";
+    string short_len = "";
+    if (str1.size() >= str2.size())
+    {
+        long_len = str1;
+        short_len = str2;
+    }else{
+        long_len = str2;
+        short_len = str1;
+    }
+     
+    string result = "";
+    int carry = 0;
+    int totalSum = 0;
+
+    int long_len_size = long_len.size();
+    int short_len_size = short_len.size();
+    
+    for (; long_len_size > 0; )
+    {
+        int lVal = long_len[long_len_size-1] - '0';
+        int sVal = 0;
+
+        if (short_len_size > 0)
+        {
+            sVal = short_len[short_len_size-1] - '0';
+        }
+
+        // 같은 자리수의 합 및 이전 초과 자리수 합
+        totalSum = carry+lVal+sVal;
+        carry = totalSum/10;
+        int remain = totalSum%10;
+
+        if (carry >0){
+            totalSum = remain;
+        }
+        
+        result.insert(0,to_string(totalSum));
+        long_len_size--;
+        short_len_size--;
+    }
+    
+    // 두 자리수의 합을 초과했는지 확인
+    if (carry > 0)
+    {
+        result.insert(0,to_string(carry));
+    }
+
+    return result;
 }
 
 
