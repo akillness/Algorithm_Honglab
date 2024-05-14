@@ -48,17 +48,15 @@ int main()
     {
         string n = "789789";
 
-        // TODO:
-        int sum = 0;
+        // TODO:        
         while(n.size() >= 2)
         {
+			int sum = 0;
             for (char c : n)
             {
                 sum += c-'0';
-            }
-            
+            }            
             n = to_string(sum);
-            sum = 0;
         }
         
         cout << n << endl;
