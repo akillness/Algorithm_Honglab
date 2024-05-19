@@ -77,42 +77,42 @@ string KaratsubaHelper(string str1, string str2, int level) // level은 디버�
 
     string a = str1.substr(0, mid);
     string b = str1.substr(mid, N - mid);
-
     string c = str2.substr(0, mid);
     string d = str2.substr(mid, N - mid);
 
     string ac = KaratsubaHelper(a, c, level + 1);
+
     // TODO:
-    string ad = KaratsubaHelper(a, d, level + 1);
-    string bc = KaratsubaHelper(b, c, level + 1);
+
+    // 2차 풀이 과정
     string bd = KaratsubaHelper(b, d, level + 1);
+    string z = KaratsubaHelper(Add(a,b),Add(c, d), level + 1);
+
+    string tmp = Subtract(z,Add(ac, bd)); // ad+bc
+//    (a+b)(c+d) = ac + ad + bc + bd;
+//    ad + bc = (a+b)(c+d) - (ac+bd)
 
     // 문자열 뒤에 '0'을 추가해서 10^N를 O(N)으로 처리
     ac.append(string((N - mid) * 2, '0'));
+    tmp.append(string((N - mid),'0'));
+    
+    string result = Add(Add(ac, tmp), bd);
     // TODO: ...
-    ad.append(string((N - mid), '0'));
-    bc.append(string((N - mid), '0'));
-//    bd.append(string((N - mid), '0'));
     
+//  1차 풀이 과정
+//    string ad = KaratsubaHelper(a, d, level + 1);
+//    string bc = KaratsubaHelper(b, c, level + 1);
+//    string bd = KaratsubaHelper(b, d, level + 1);
     
-    string result = Add(ac,ad);
-    result = Add(result,bc);
-    result = Add(result,bd);
+//    ad.append(string((N - mid), '0'));
+//    bc.append(string((N - mid), '0'));
+//    
+//    
+//    string result = Add(ac,ad);
+//    result = Add(result,bc);
+//    result = Add(result,bd);
 
-    // 디버깅 참고 (저는 하나하나 다 출력해보면서 디버깅합니다.)
-//    int ai = stoi(a);
-//    int bi = stoi(b);
-//    int ci = stoi(c);
-//    int di = stoi(d);
-//    int tempi = ai * di + bi * ci;
-//    cout << "Ref " << str1 << " x " << str2 << " = "
-//        << ai * ci << " + " << tempi << " + " << bi * di << " = " << ai * ci + tempi + bi * di << endl;
-//    cout << "Result " << str1 << " x " << str2 << " = "
-//        << ac << " + " << temp << " + " << bd << " = " << result << endl;
-    // 주의: int 범위를 넘어가는 큰 숫자에 대해서는 사용할 수 없음
-    // assert(stoi(result) == stoi(str1) * stoi(str2));
-
-//    return string("0"); 
+ 
     return result;
 }
 
