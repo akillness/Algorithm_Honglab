@@ -71,8 +71,12 @@ private:
         
         int i=lo, j=mid+1;
         
+        if (a[mid] <= a[j]) // 이미 정렬이 되어있다면 아래의 과정을 반복하지않겠다
+            return;
+
         for (int k = lo; k <= hi; k++)
             aux[k] = a[k];
+        
         
         for (int k = lo; k < hi+1; k++ ){
             if(i > mid) 
