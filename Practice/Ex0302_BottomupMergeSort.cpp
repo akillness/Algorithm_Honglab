@@ -59,6 +59,11 @@ public:
                 Merge(a, lo, mid, hi);
             }
         }
+
+        // 힌트 풀이 ㄱ
+        // for (int sz = 1; sz < N; sz = sz + sz)
+        //     for (int lo = 0; lo < N - sz; lo += sz + sz)
+        //         Merge(a, lo, lo + sz - 1, std::min(lo + sz + sz - 1, N - 1));
         
     }
 
@@ -92,6 +97,25 @@ private:
         
         cout<< "After : ";
         Print(a,lo,hi);
+
+        // 힌트 풀이 ㄱ
+        //  cout << "Before: ";
+        // Print(a, lo, hi);
+
+        // int i = lo, j = mid + 1;
+        // if (a[mid] <= a[j]) // 최선의 경우             return;
+        // for (int k = lo; k <= hi; k++)
+        //     aux[k] = a[k];
+        // for (int k = lo; k <= hi; k++)
+        // {
+        //     if (i > mid) a[k] = aux[j++];
+        //     else if (j > hi) a[k] = aux[i++];
+        //     else if (aux[j] < aux[i]) a[k] = aux[j++];
+        //     else a[k] = aux[i++];
+        // }
+
+        // cout << "After : ";
+        // Print(a, lo, hi);
     }
 
     vector<int> aux; // 추가 메모리
