@@ -77,8 +77,8 @@ private:
         for (int k = lo; k <= hi; k++)
             aux[k] = a[k];
         
-        
-        for (int k = lo; k < hi+1; k++ ){
+
+        for (int k = lo; k <= hi; k++ ){
             if(i > mid) 
                 a[k] = aux[j++];
             else if(j > hi) 
