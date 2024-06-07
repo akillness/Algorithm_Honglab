@@ -64,10 +64,10 @@ public:
     {
         if (x == nullptr) return -1; // 편의상 못 찾았을 경우 -1 반환
 
-        // if (key < x->key) TODO:
-        // else if (key > x->key) TODO:
-        // else return x->val;
-        return -1; // TODO: 삭제
+        if (key < x->key) return Search(x->left, key);
+        else if (key > x->key) return Search(x->right, key);
+        else return x->val;
+//        return -1; // TODO: 삭제
     }
 
     // 이진트리 복습
@@ -76,10 +76,10 @@ public:
     {
         if (x == nullptr) return false;
 
-        // if (key < x->key) TODO:
-        // else if (key > x->key) TODO:
-        // else return true;
-        return false; // 삭제
+        if (key < x->key) return Contains(x->left, key);
+        else if (key > x->key) return Contains(x->right,key);
+        else return true;
+//        return false; // 삭제
     }
 
     // 키(key)가 가장 작은 노드 찾기 (이진트리 복습)
@@ -89,8 +89,11 @@ public:
     }
     Node* Min(Node* x)
     {
-        // return TODO:
-        return nullptr; // 삭제
+        if (x->left == nullptr)
+            return x;
+        else
+            return Min(x->left);
+//        return nullptr; // 삭제
     }
 
     // 키(key)가 가장 큰 노드 찾기 (이진트리 복습)
@@ -100,8 +103,11 @@ public:
     }
     Node* Max(Node* x)
     {
-        // return TODO:
-        return nullptr; // 삭제
+         if (x->right == nullptr)
+             return x;
+        else
+            return Max(x->right);
+//        return nullptr; // 삭제
     }
 
     // AVL과 비슷
@@ -157,7 +163,6 @@ public:
      
         // 오른쪽이 레드이고 왼쪽은 레드가 아니면?
         // if (TODO) h = TODO
-
         if (!IsRed(h->left) && IsRed(h->right))
             h = RotateLeft(h);
 
@@ -304,15 +309,15 @@ public:
 
     Node* Delete(Node* h, Key key)
     {
-        //if ( TODO ) // 왼쪽으로 찾아 내려가서 지우는 경우
-        //{
-        //    // 힌트: DeleteMin()과 비슷함
+        if ( h->key > key ) // 왼쪽으로 찾아 내려가서 지우는 경우
+        {
+            // 힌트: DeleteMin()과 비슷함
 
-        //    if ( TODO )
-        //        h = TODO
+            if ( TODO )
+                h = TODO
 
-        //    h->left = TODO
-        //}
+            h->left = TODO
+        }
         //else // 오른쪽으로 찾아 내려가거나 바로 삭제하는 경우
         //{
         //    // DeleteMax()와 비슷한 경우
@@ -402,7 +407,7 @@ int main()
         {
             cout << "Insert: " << string(1, c) << endl;
             bst.Insert(string(1, c), int(c));
-            bst.Print2D();
+            // bst.Print2D();
 
         }
 
@@ -414,13 +419,13 @@ int main()
 
         bst.Print2D();
 
-        //for (char c : keys)
-        //{
-        //    cout << "Delete: " << string(1, c) << endl;
-        //    bst.Delete(string(1, c));
-        //    bst.Print2D();
+        for (char c : keys)
+        {
+           cout << "Delete: " << string(1, c) << endl;
+           bst.Delete(string(1, c));
+           bst.Print2D();
 
-        //}
+        }
         //return 0;
 
         //while (!bst.IsEmpty())
