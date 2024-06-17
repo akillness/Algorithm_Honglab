@@ -168,7 +168,7 @@ public:
 
         // 왼쪽과 왼쪽의 왼쪽이 둘 다 레드이면?
         // if (TODO) h = TODO
-        if (IsRed(h->left->left) && IsRed(h->left)){
+        if ( IsRed(h->left->left) && IsRed(h->left)){
             h = RotateRight(h);
         }
         
@@ -178,6 +178,7 @@ public:
             FlipColors(h);
       
         h->size = Size(h->left) + Size(h->right) + 1;
+        
 
         return h;
     }
@@ -215,30 +216,38 @@ public:
         FlipColors(h);
 
         // 오른쪽 자식의 왼쪽 자식이 레드라면 (오른쪽 자식이 3-노드라면)
-        //if (...)
-        //{
-        //    // 그 중에서 가장 작은 것을 h의 왼쪽으로 옮김
-        //    // 삭제 후 남을 여분을 하나 가져오는 것
-        //    // 왼쪽을 3/4-노드로 만들어서 쉽게 삭제하기 위함
-        //    TODO:
-        //    TODO:
-        //
-        //    FlipColors(h);
-        //}
+        if (IsRed(h->right->left))
+        {
+            // 그 중에서 가장 작은 것을 h의 왼쪽으로 옮김
+            // 삭제 후 남을 여분을 하나 가져오는 것
+            // 왼쪽을 3/4-노드로 만들어서 쉽게 삭제하기 위함
+            h->right = RotateRight(h->right);
+            h = RotateLeft(h);
+            FlipColors(h);
+        }
 
         return h;
     }
 
-    // 삭제할 때 사용됨 (MoveRedLeft와 좌우대칭)
+
+    // 삭제할 때 사용됨 (MoreRedLeft와 좌우대칭)
     Node* MoveRedRight(Node* h)
     {
         cout << "MoveRedRight() " << h->key << endl;
 
-        // TODO:
+        // assert (h != null);
+        // assert (IsRed(h) && !IsRed(h->right) && !IsRed(h->right->left);
+
+        FlipColors(h);
+
+        if (IsRed(h->left->left))
+        {
+            h = RotateRight(h);
+            FlipColors(h);
+        }
 
         return h;
     }
-
     // 가장 작은 키(key)를 찾아서 삭제
     void DeleteMin()
     {
@@ -255,26 +264,26 @@ public:
             root->color = Color::kBlack;
     }
 
+
     Node* DeleteMin(Node* h)
     {
         cout << "DeleteMin() " << h->key << endl;
 
         // h가 가장 작은 노드라면 삭제하고 반환
-        //if ( TODO )
-        //{
-        //    cout << "Delete node " << h->key << endl;
-        //    delete h; // 자바에서는 가비지 컬렉터 사용
-        //    return nullptr;
-        //}
+        if (h->left == nullptr)
+        {
+            cout << "Delete node " << h->key << endl;
+            delete h; // 자바에서는 가비지 컬렉터 사용
+            return nullptr;
+        }
 
         // 왼쪽자식이 블랙이고, 왼쪽-왼쪽 자식도 블랙이면
         // 삭제하기 어렵기 때문에 MoveRedLeft()에서 3-노드로 변경
-        //if ( TODO )
-        //{
-        //    TODO:
-        //
-        //    Print2D(h);
-        //}
+        if (!IsRed(h->left) && !IsRed(h->left->left))
+        {
+            h = MoveRedLeft(h);
+            Print2D(h);
+        }
 
         // 계속 찾아 내려감
         h->left = DeleteMin(h->left);
@@ -285,12 +294,32 @@ public:
     // 가장 큰 키(key)를 찾아서 삭제 (DeleteMin과 대칭)
     void DeleteMax()
     {
-        // TODO:
+        if (!IsRed(root->left) && !IsRed(root->right))
+            root->color = Color::kRed;;
+        root = DeleteMax(root);
+        if (!IsEmpty()) root->color = Color::kBlack;
     }
+
     Node* DeleteMax(Node* h)
     {
-        // TODO:
-        return nullptr;
+        // 실행 예시에서 *S-X에서 X 삭제 참고
+        // *S가 X의 왼쪽 자식이기 때문에 *S를 위로 올려서
+        // X가 *S의 오른쪽 자식이 되도록 만든 후에 X 삭제
+        if (IsRed(h->left))
+            h = RotateRight(h);
+
+        if (h->right == nullptr)
+        {
+            delete h; // 자바는 가비지 컬렉터 사용
+            return nullptr;
+        }
+
+        if (!IsRed(h->right) && !IsRed(h->right->left))
+            h = MoveRedRight(h);
+
+        h->right = DeleteMax(h->right);
+
+        return Balance(h);
     }
 
     // 임의의 키(key)를 찾아서 삭제
@@ -307,47 +336,50 @@ public:
         if (!IsEmpty()) root->color = Color::kBlack;
     }
 
+
     Node* Delete(Node* h, Key key)
     {
-        if ( h->key > key ) // 왼쪽으로 찾아 내려가서 지우는 경우
+        if (key < h->key) // 왼쪽으로 찾아 내려가서 지우는 경우
         {
-            // 힌트: DeleteMin()과 비슷함
+            // DeleteMin()과 비슷함
 
-            if ( TODO )
-                h = TODO
+            if (!IsRed(h->left) && !IsRed(h->left->left))
+                h = MoveRedLeft(h);
 
-            h->left = TODO
+            h->left = Delete(h->left, key);
         }
-        //else // 오른쪽으로 찾아 내려가거나 바로 삭제하는 경우
-        //{
-        //    // DeleteMax()와 비슷한 경우
-        //    if ( TODO )
-        //        h = TODO
+        else // 오른쪽으로 찾아 내려가거나 바로 삭제하는 경우
+        {
+            // DeleteMax()와 비슷한 경우
+            if (IsRed(h->left))
+                h = RotateRight(h);
 
-        //    // 키가 일치하고 오른쪽 서브트리가 없으면 삭제
-        //    // 왼쪽 서브트리에 대한 처리는 바로 위의 RotateRight()에 해줬음
-        //    if ((TODO) && (TODO))
-        //    {
-        //        delete h; // 자바는 가비지 컬렉터 사용
-        //        return nullptr;
-        //    }
+            // 키가 일치하고 오른쪽 서브트리가 없으면 삭제
+            // 왼쪽 서브트리에 대한 처리는 바로 위의 RotateRight()에 해줬음
+            if ((key == h->key) && (h->right == nullptr))
+            {
+                delete h; // 자바는 가비지 컬렉터 사용
+                return nullptr;
+            }
 
-        //    if (!IsRed(h->right) && !IsRed(h->right->left))
-        //        h = MoveRedRight(h);
+            if (!IsRed(h->right) && !IsRed(h->right->left))
+                h = MoveRedRight(h);
 
-        //    // 삭제하는 경우
-        //    if (key == h->key)
-        //    {
-        //        // 오른쪽 서브트리에서 가장 작은 것을 h로 복사한 후에
-        //        // DeleteMin()으로 그것을 삭제
-        //
-        //        // TODO: Min() 사용, 4줄 정도 됩니다.
-        //    }
-        //    else {
-        //        // 오른쪽으로 계속 찾아가기
-        //        h->right = Delete(h->right, key);
-        //    }
-        //}
+            // 삭제하는 경우
+            if (key == h->key)
+            {
+                // 오른쪽 서브트리에서 가장 작은 것을 h로 복사한 후에
+                // DeleteMin()으로 그것을 삭제
+                Node* x = Min(h->right);
+                h->key = x->key;
+                h->val = x->val;
+                h->right = DeleteMin(h->right);
+            }
+            else {
+                // 오른쪽으로 계속 찾아가기
+                h->right = Delete(h->right, key);
+            }
+        }
 
         return Balance(h);
     }
